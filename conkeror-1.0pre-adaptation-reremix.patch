@@ -1,0 +1,74 @@
+diff -urN conkeror/reremix/conkeror conkeror-1.0pre/reremix/conkeror
+--- conkeror/reremix/conkeror	1970-01-01 04:00:00.000000000 +0400
++++ conkeror-1.0pre/reremix/conkeror	2012-01-04 03:24:09.388742066 +0400
+@@ -0,0 +1,24 @@
++#! /bin/sh
++
++# (C) Copyright 2008-2010 John J. Foerch
++#
++# Use, modification, and distribution are subject to the terms specified in the
++# COPYING file.
++
++# This bash script can be used to launch conkeror on *nix systems that
++# support symlinking.  Create a symlink to this script in a directory
++# in your executable search path.
++#
++# For example:
++#
++#   sudo ln -s /path/to/conkeror/contrib/run-conkeror /usr/local/bin/conkeror
++#
++xulrunner=`which xulrunner`
++if [ -x "$xulrunner" ]; then
++    exec "$xulrunner" application.ini "$@"
++    exit 0
++else
++    echo "$0: cannot continue. XULRunner not found." >&2
++    exit 1
++fi
++
+diff -urN conkeror/reremix/install.sh conkeror-1.0pre/reremix/install.sh
+--- conkeror/reremix/install.sh	1970-01-01 04:00:00.000000000 +0400
++++ conkeror-1.0pre/reremix/install.sh	2012-01-04 03:24:09.388742066 +0400
+@@ -0,0 +1,42 @@
++#! /bin/bash
++# This script is install conkeror in RERemix
++function copy_tree_sans_boring () {
++    src="$1"
++    dest="$2"
++    mkdir -p "$dest"
++    O=$IFS
++    IFS=$'\n'
++    ( cd "$src"; find . -type d -and \! -name '*[~#]' -print0 ) \
++        | ( cd "$dest"; xargs -0 mkdir -p )
++    files=($( cd "$src"; find . -type f -and \! -name '*[~#]' -print ))
++    for file in "${files[@]}" ; do cp "$src/$file" "$dest/$file" ; done
++    IFS=$O
++}
++
++echo Starting install script...
++
++PREFIX=${PREFIX:-/usr/local}
++
++while [[ "$1" = -* ]]; do
++    case "$1" in
++        -build) BUILD=1 ;;
++        -prefix) PREFIX="${2%/}" ; shift ;;
++        *)
++            echo "Unrecognized option. Please read the source."
++            exit 1
++    esac
++    shift
++done
++
++SCRATCH=$PREFIX/lib64/conkeror
++echo $SCRATCH
++mkdir -p "$SCRATCH/chrome"
++cp application.ini "$SCRATCH"
++cp conkeror-spawn-helper "$SCRATCH"
++cp chrome.manifest "$SCRATCH"
++cp reremix/conkeror "$SCRATCH"
++for x in branding chrome components content defaults locale modules search-engines help style; do
++    copy_tree_sans_boring "$x" "$SCRATCH/$x"
++done
++#ln -sf ../lib64/conkeror/conkeror "$PREFIX"/bin/conkeror
++echo ok

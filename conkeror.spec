@@ -47,7 +47,7 @@ sed -i "s!application.ini!%{_conkdir}/application.ini!" reremix/conkeror
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_libdir},%{_bindir}}
 reremix/install.sh -prefix $RPM_BUILD_ROOT/usr &> /dev/null
-ln -sf ../lib64/conkeror/conkeror $RPM_BUILD_ROOT%{_bindir}/conkeror
+ln -sf ../%{_lib}/conkeror/conkeror $RPM_BUILD_ROOT%{_bindir}/conkeror
 
 
 %clean

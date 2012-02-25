@@ -1,6 +1,6 @@
-diff -urN conkeror/reremix/conkeror conkeror-1.0pre/reremix/conkeror
---- conkeror/reremix/conkeror	1970-01-01 04:00:00.000000000 +0400
-+++ conkeror-1.0pre/reremix/conkeror	2012-01-04 03:24:09.388742066 +0400
+diff -urN conkeror-1.0pre.orig/reremix/conkeror conkeror-1.0pre/reremix/conkeror
+--- conkeror-1.0pre.orig/reremix/conkeror	1970-01-01 03:00:00.000000000 +0300
++++ conkeror-1.0pre/reremix/conkeror	2012-02-26 00:01:49.723820354 +0400
 @@ -0,0 +1,24 @@
 +#! /bin/sh
 +
@@ -26,10 +26,10 @@ diff -urN conkeror/reremix/conkeror conkeror-1.0pre/reremix/conkeror
 +    exit 1
 +fi
 +
-diff -urN conkeror/reremix/install.sh conkeror-1.0pre/reremix/install.sh
---- conkeror/reremix/install.sh	1970-01-01 04:00:00.000000000 +0400
-+++ conkeror-1.0pre/reremix/install.sh	2012-01-04 03:24:09.388742066 +0400
-@@ -0,0 +1,42 @@
+diff -urN conkeror-1.0pre.orig/reremix/install.sh conkeror-1.0pre/reremix/install.sh
+--- conkeror-1.0pre.orig/reremix/install.sh	1970-01-01 03:00:00.000000000 +0300
++++ conkeror-1.0pre/reremix/install.sh	2012-02-26 00:03:11.003824225 +0400
+@@ -0,0 +1,46 @@
 +#! /bin/bash
 +# This script is install conkeror in RERemix
 +function copy_tree_sans_boring () {
@@ -60,7 +60,11 @@ diff -urN conkeror/reremix/install.sh conkeror-1.0pre/reremix/install.sh
 +    shift
 +done
 +
-+SCRATCH=$PREFIX/lib64/conkeror
++if [ -d $PREFIX/lib64 ]; then
++    SCRATCH=$PREFIX/lib64/conkeror
++else
++    SCRATCH=$PREFIX/lib/conkeror
++fi
 +echo $SCRATCH
 +mkdir -p "$SCRATCH/chrome"
 +cp application.ini "$SCRATCH"
